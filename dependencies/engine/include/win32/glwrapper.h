@@ -1,5 +1,9 @@
 #pragma once
+// OpenGL ES includes
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 
-// OpenGL and GLEW Header Files and Libraries
-#include <gl/glew.h>
-#include <gl/wglew.h>
+// EGL includes
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
+#include <EGL/eglplatform.h>

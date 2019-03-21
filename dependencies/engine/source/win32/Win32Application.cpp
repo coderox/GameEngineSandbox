@@ -4,8 +4,7 @@
 #include "GameLoop.h"
 #include <memory>
 
-#include <GL/glew.h>
-#include <GL/wglew.h>
+#include "glwrapper.h"
 
 #define MAX_LOADSTRING				100
 #define IDS_APP_TITLE				103
@@ -22,6 +21,8 @@ namespace
 // Global Variables:
 HINSTANCE hInst;                                // current instance
 HDC hDC;			 // Private GDI Device Context
+EGLSurface mEglSurface;
+EGLDisplay mEglDisplay;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -54,7 +55,7 @@ void StartWin32Application()
 		else
 		{
 			g_gameLoop->Tick();
-			SwapBuffers(hDC);
+			eglSwapBuffers(mEglDisplay, mEglSurface);
 		}
 	}
 
@@ -153,26 +154,104 @@ BOOL InitInstance(HINSTANCE hInstance)
 		return false;
 	}
 
-	auto hRC = wglCreateContext(hDC);
-	if (!hRC) {
-		//KillGLWindow(fullscreen);
-		MessageBox(NULL, "Can't Create A GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+
+	const EGLint configAttributes[] =
+	{
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_BLUE_SIZE, 8,
+		EGL_ALPHA_SIZE, 8,
+		EGL_DEPTH_SIZE, 8,
+		EGL_STENCIL_SIZE, 8,
+		EGL_NONE
+	};
+
+	const EGLint surfaceAttributes[] =
+	{
+		EGL_NONE
+	};
+
+	const EGLint contextAttibutes[] =
+	{
+		EGL_CONTEXT_CLIENT_VERSION, 2,
+		EGL_NONE
+	};
+
+	const EGLint displayAttributes[] =
+	{
+		EGL_PLATFORM_ANGLE_TYPE_ANGLE, EGL_PLATFORM_ANGLE_TYPE_D3D11_ANGLE,
+		EGL_NONE,
+	};
+
+	EGLConfig config = 0;
+
+	// eglGetPlatformDisplayEXT is an alternative to eglGetDisplay. It allows us to specifically request D3D11 instead of D3D9.
+	PFNEGLGETPLATFORMDISPLAYEXTPROC eglGetPlatformDisplayEXT = reinterpret_cast<PFNEGLGETPLATFORMDISPLAYEXTPROC>(eglGetProcAddress("eglGetPlatformDisplayEXT"));
+	if (!eglGetPlatformDisplayEXT)
+	{
+		OutputDebugStringW(L"Failed to get function eglGetPlatformDisplayEXT");
+	}
+
+	mEglDisplay = eglGetPlatformDisplayEXT(EGL_PLATFORM_ANGLE_ANGLE, hDC, displayAttributes);
+	if (mEglDisplay == EGL_NO_DISPLAY)
+	{
+		OutputDebugStringW(L"Failed to get requested EGL display");
+		//CleanupEGL();
 		return false;
 	}
 
-	if (!wglMakeCurrent(hDC, hRC)) {
-		//KillGLWindow(fullscreen);
-		MessageBox(NULL, "Can't Activate The GL Rendering Context.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+	if (eglInitialize(mEglDisplay, NULL, NULL) == EGL_FALSE)
+	{
+		OutputDebugStringW(L"Failed to initialize EGL");
+		//CleanupEGL();
+		return false;
+	}
+
+	EGLint numConfigs;
+	if ((eglChooseConfig(mEglDisplay, configAttributes, &config, 1, &numConfigs) == EGL_FALSE) || (numConfigs == 0))
+	{
+		OutputDebugStringW(L"Failed to choose first EGLConfig");
+		//CleanupEGL();
+		return false;
+	}
+
+	mEglSurface = eglCreateWindowSurface(mEglDisplay, config, hWnd, surfaceAttributes);
+	if (mEglSurface == EGL_NO_SURFACE)
+	{
+		OutputDebugStringW(L"Failed to create EGL fullscreen surface");
+		//CleanupEGL();
+		return false;
+	}
+
+	if (eglGetError() != EGL_SUCCESS)
+	{
+		OutputDebugStringW(L"eglGetError has reported an error");
+		//CleanupEGL();
+		return false;
+	}
+
+	auto mEglContext = eglCreateContext(mEglDisplay, config, NULL, contextAttibutes);
+	if (mEglContext == EGL_NO_CONTEXT)
+	{
+		OutputDebugStringW(L"Failed to create EGL context");
+		//CleanupEGL();
+		return false;
+	}
+
+	if (eglMakeCurrent(mEglDisplay, mEglSurface, mEglSurface, mEglContext) == EGL_FALSE)
+	{
+		OutputDebugStringW(L"Failed to make EGLSurface current");
+		//CleanupEGL();
 		return false;
 	}
 
 	ShowWindow(hWnd, 5);
 	UpdateWindow(hWnd);
 
-	if (glewInit() != GLEW_OK) { // Enable GLEW
-		MessageBox(NULL, "GLEW Initialization Failed.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
-		return false;
-	}
+	//if (glewInit() != GLEW_OK) { // Enable GLEW
+	//	MessageBox(NULL, "GLEW Initialization Failed.", "ERROR", MB_OK | MB_ICONEXCLAMATION);
+	//	return false;
+	//}
 
 	//GetClientRect(hWnd, &rc);
 	//g_gameLoop->OnWindowSizeChanged(rc.right - rc.left, rc.bottom - rc.top);
