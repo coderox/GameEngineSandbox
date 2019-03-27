@@ -4,19 +4,11 @@ set(DEPENDENCIES
     utilities
 )
 
-#if(UWP)
-    message(STATUS "Is UWP")
+if(MSVC)
     list(APPEND DEPENDENCIES 
         libEGL
         libGLESv2
     )
-#else()
-#    message(STATUS "Is not UWP")
-#    list(APPEND DEPENDENCIES 
-#        GLEW::GLEW
-#        opengl32.lib
-#    )
-#    find_package(GLEW REQUIRED)
-#endif()
+endif()
 
 build_library(${PROJECT_NAME} "${DEPENDENCIES}")
