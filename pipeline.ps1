@@ -35,6 +35,7 @@ $PlatformParameters = ""
 $Generator = "Visual Studio 16 2019"
 $BuildType = ""
 $BuildConfiguration = "Debug"
+$toolchainFile = "dependencies/thirdparty/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
 If($vs2017){
     $Generator = "Visual Studio 15 2017"
@@ -48,7 +49,7 @@ If($win32) {
     $PlatformParameters = "-DCMAKE_TOOLCHAIN_FILE='$toolchainFile'"
 } ElseIf($uwp) {
     $BuildDirectory = "build/uwp"
-    $PlatformParameters = @("-DCMAKE_SYSTEM_NAME='WindowsStore'", "-DCMAKE_SYSTEM_VERSION='10.0'")
+    $PlatformParameters = @("-DCMAKE_TOOLCHAIN_FILE='$toolchainFile'", "-DCMAKE_SYSTEM_NAME='WindowsStore'", "-DCMAKE_SYSTEM_VERSION='10.0'")
 }
 
 If($release) {

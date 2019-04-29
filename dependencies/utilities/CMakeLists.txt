@@ -1,9 +1,10 @@
 project(utilities)
 
 if(WINDOWS_STORE)
+    find_package(unofficial-angle CONFIG REQUIRED)
     list(APPEND DEPENDENCIES 
-        libEGL
-        libGLESv2
+        unofficial::angle::libEGL
+        unofficial::angle::libGLESv2
     )
 else()
     find_package(GLEW REQUIRED)
