@@ -2,7 +2,7 @@
 #include <gtest\gtest.h>
 #include <iostream>
 
-#include <url/tests.h>
+#include <url/tests.hpp>
 
 int __cdecl main()
 {

@@ -30,6 +30,11 @@ You can leverage the pipeline.ps1 Powershell command to automate the creation of
 #### Generate and build a release version for Universal Windows Platform
 `pipeline.ps1 -uwp -build`
 
+#### Generate and build a debug version with tests for Universal Windows Platform
+`pipeline.ps1 -uwp -debug -build -tests`
+
+This will create two runnable client projects, one game client and an additional 'tests' client which will run all the tests leveraging gtest as the testing framework
+
 #### Only generate a debug version for Win32
 `pipeline.ps1 -win32 -debug -generate`
 

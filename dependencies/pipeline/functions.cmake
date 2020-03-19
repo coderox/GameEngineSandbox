@@ -42,6 +42,14 @@ macro(update_sources)
     )
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${PLATFORM_SOURCES})
 
+    if(TESTS)
+        file(GLOB TEST_SOURCES
+            tests/source/${PLATFORM}/*.cpp
+            tests/source/${PLATFORM}/*.h*
+        )
+        source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_SOURCES})
+    endif()
+
     if(UWP OR WIN32)
         file(GLOB PLATFORM_COMMON_SOURCES
             source/msft/*.cpp
@@ -75,6 +83,12 @@ function(build_library project_name)
     )
 
     if(TESTS)
+        file(GLOB_RECURSE TEST_HEADERS 
+            tests/include/common/*.h*
+            tests/include/${PLATFORM}/*.h*
+        )
+        source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${TEST_HEADERS})
+
         list(APPEND LIBRARY_INCLUDE_DIRECTORIES 
             tests/include/common
             tests/include/${PLATFORM}
@@ -99,9 +113,9 @@ function(build_library project_name)
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${EXTERNAL_PLATFORM_COMMON_HEADERS})
 
     if(SHARED)
-        add_library(${project_name} SHARED ${PLATFORM_SOURCES} ${COMMON_SOURCES} ${PLATFORM_COMMON_SOURCES} ${EXTERNAL_HEADERS} ${EXTERNAL_PLATFORM_COMMON_HEADERS})
+        add_library(${project_name} SHARED ${PLATFORM_SOURCES} ${COMMON_SOURCES} ${PLATFORM_COMMON_SOURCES} ${TEST_SOURCES} ${EXTERNAL_HEADERS} ${TEST_HEADERS} ${EXTERNAL_PLATFORM_COMMON_HEADERS})
     else()
-        add_library(${project_name} STATIC ${PLATFORM_SOURCES} ${COMMON_SOURCES} ${PLATFORM_COMMON_SOURCES} ${EXTERNAL_HEADERS} ${EXTERNAL_PLATFORM_COMMON_HEADERS})
+        add_library(${project_name} STATIC ${PLATFORM_SOURCES} ${COMMON_SOURCES} ${PLATFORM_COMMON_SOURCES} ${TEST_SOURCES} ${EXTERNAL_HEADERS} ${TEST_HEADERS} ${EXTERNAL_PLATFORM_COMMON_HEADERS})
     endif()
 
     target_link_libraries(${project_name} ${DEPENDENCIES})
