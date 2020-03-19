@@ -5,6 +5,7 @@
 #include "scenes/GameOverScene.h"
 #include "scenes/PauseScene.h"
 #include "scenes/ISceneManager.h"
+#include "url\UrlParser.h"
 
 using namespace std;
 using namespace Utilities;
@@ -20,6 +21,8 @@ Game::Game()
 void Game::Initialize()
 {
 	mSceneManager = IOCContainer::Instance().Resolve<ISceneManager>();
+	auto url = std::make_shared<Engine::UrlParser>(L"http://www.coderox.se/blog");
+	auto domain = url->GetDomain();
 }
 
 void Game::Update(shared_ptr<IStepTimer> timer)

@@ -12,6 +12,8 @@ add_subdirectory(scenes ${CMAKE_CURRENT_BINARY_DIR}/engine/scenes)
 
 add_subdirectory(textures ${CMAKE_CURRENT_BINARY_DIR}/engine/textures)
 
+add_subdirectory(url ${CMAKE_CURRENT_BINARY_DIR}/engine/url)
+
 if(WINDOWS_STORE)
     add_subdirectory(updatetask ${CMAKE_CURRENT_BINARY_DIR}/engine/updatetask)
 endif()
