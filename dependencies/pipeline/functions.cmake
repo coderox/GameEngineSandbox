@@ -74,6 +74,13 @@ function(build_library project_name)
         include/${PLATFORM}
     )
 
+    if(TESTS)
+        list(APPEND LIBRARY_INCLUDE_DIRECTORIES 
+            tests/include/common
+            tests/include/${PLATFORM}
+        )
+    endif()
+
     if(UWP OR WIN32)
         file(GLOB_RECURSE EXTERNAL_PLATFORM_COMMON_HEADERS 
             include/msft/*.h*

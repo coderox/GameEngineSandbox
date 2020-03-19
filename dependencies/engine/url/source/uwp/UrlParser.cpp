@@ -19,12 +19,12 @@ namespace Engine {
 
         std::wstring GetDomain() 
         {
-            return L"";
+            return mUri.Domain().c_str();
         }
 
         std::wstring GetPath() 
         {
-            return L"";
+            return mUri.Path().c_str();
         }
 
     private:

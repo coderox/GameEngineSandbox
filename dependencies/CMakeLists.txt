@@ -1,3 +1,5 @@
 add_subdirectory(engine)
 add_subdirectory(thirdparty)
-add_subdirectory(tests)
+if(TESTS)
+    add_subdirectory(tests)
+endif()

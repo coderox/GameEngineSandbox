@@ -17,4 +17,8 @@ if(WINDOWS_STORE)
         set_target_properties (${ANGLE_TARGET} PROPERTIES FOLDER ${ANGLE_FOLDER})
     endforeach()
 
+    if(TESTS)
+        set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+        add_subdirectory(googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
+    endif()
 endif()

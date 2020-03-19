@@ -25,8 +25,10 @@ Param(
     [switch]$release,
     
     [Parameter(Mandatory = $False)]
-    [switch]$vs2017
+    [switch]$vs2017,
     
+    [Parameter(Mandatory = $False)]
+    [switch]$tests
 )
 
 $Cmake = "cmake.exe"
@@ -70,6 +72,9 @@ if($generate -OR $build) {
 if($generate -OR $build -OR $update) {
     $GenerateParameters = @("-E", "chdir", $BuildDirectory, "cmake", "-G", $Generator)
     $GenerateParameters += $PlatformParameters
+    if($tests) {
+        $GenerateParameters += "-DTESTS=1"
+    }
     $GenerateParameters += $BuildType
     $GenerateParameters += ("-A", "x64", "../..")
     & $Cmake $GenerateParameters

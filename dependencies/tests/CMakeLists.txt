@@ -19,6 +19,7 @@ set(DEPENDENCIES
 #    input
 #    scenes
     url
+    gtest
 )
 
 if(WINDOWS_STORE)
