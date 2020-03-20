@@ -16,22 +16,24 @@ if(WINDOWS_STORE)
     foreach(ANGLE_TARGET ${ANGLE_TARGETS})
         set_target_properties (${ANGLE_TARGET} PROPERTIES FOLDER ${ANGLE_FOLDER})
     endforeach()
+endif()
 
-    if(TESTS)
+if(TESTS)
+    if(WINDOWS_STORE)
         set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-        add_subdirectory(googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
-
-        set(GOOGLETEST_FOLDER "Thirdparty/GoogleTest")
-
-        set(GOOGLETEST_TARGETS
-            gtest
-            gtest_main
-            gmock
-            gmock_main
-        )
-
-        foreach(GOOGLETEST_TARGET ${GOOGLETEST_TARGETS})
-            set_target_properties (${GOOGLETEST_TARGET} PROPERTIES FOLDER ${GOOGLETEST_FOLDER})
-        endforeach()
     endif()
+    add_subdirectory(googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
+
+    set(GOOGLETEST_FOLDER "Thirdparty/GoogleTest")
+
+    set(GOOGLETEST_TARGETS
+        gtest
+        gtest_main
+        gmock
+        gmock_main
+    )
+
+    foreach(GOOGLETEST_TARGET ${GOOGLETEST_TARGETS})
+        set_target_properties (${GOOGLETEST_TARGET} PROPERTIES FOLDER ${GOOGLETEST_FOLDER})
+    endforeach()
 endif()

@@ -47,6 +47,8 @@ if(WINDOWS_STORE)
         "${PROJECT_BINARY_DIR}/package.appxManifest"
         "${PROJECT_BINARY_DIR}/TemporaryKey.pfx"
     )
+
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib")
 endif()
 
 if(LINUX)
@@ -57,26 +59,25 @@ if(LINUX)
     )
 endif()
 
-set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /nodefaultlib:vccorlibd /nodefaultlib:msvcrtd vccorlibd.lib msvcrtd.lib")
-
 build_executable(${PROJECT_NAME} "${DEPENDENCIES}" "${RESOURCES}")
 source_group("resources" ${RESOURCES})
 
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    LINK_FLAGS /SUBSYSTEM:CONSOLE
+)
+
 if(WINDOWS_STORE)
     set_property(SOURCE ${RESOURCES} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-    set_target_properties(${PROJECT_NAME} PROPERTIES
-        LINK_FLAGS /SUBSYSTEM:CONSOLE
-    )
 else()
 
-    add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                       COMMAND ${CMAKE_COMMAND} -E copy_directory
-                       ${COMMON_RESOURCES_DIRECTORY} $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
+    # add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    #                    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    #                    ${COMMON_RESOURCES_DIRECTORY} $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
     
-    set(PLATFORM_RESOURCES)
-    if(EXISTS "${PLATFORM_RESOURCES_DIRECTORY}" AND IS_DIRECTORY "${PLATFORM_RESOURCES_DIRECTORY}")
-        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-                           COMMAND ${CMAKE_COMMAND} -E copy_directory
-                           ${PLATFORM_RESOURCES_DIRECTORY} $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
-    endif()
+    # set(PLATFORM_RESOURCES)
+    # if(EXISTS "${PLATFORM_RESOURCES_DIRECTORY}" AND IS_DIRECTORY "${PLATFORM_RESOURCES_DIRECTORY}")
+    #     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    #                        COMMAND ${CMAKE_COMMAND} -E copy_directory
+    #                        ${PLATFORM_RESOURCES_DIRECTORY} $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
+    # endif()
 endif()

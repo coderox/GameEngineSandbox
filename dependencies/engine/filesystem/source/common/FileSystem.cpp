@@ -10,8 +10,8 @@ using namespace Windows::ApplicationModel;
 #elif WIN32
 #include <Windows.h>
 #include <vector>
-#include <experimental/filesystem>
-namespace fs = std::experimental::filesystem;
+#include <filesystem>
+namespace fs = std::filesystem;
 #endif
 
 using namespace Engine;
