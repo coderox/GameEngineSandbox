@@ -20,5 +20,18 @@ if(WINDOWS_STORE)
     if(TESTS)
         set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
         add_subdirectory(googletest ${CMAKE_CURRENT_BINARY_DIR}/googletest)
+
+        set(GOOGLETEST_FOLDER "Thirdparty/GoogleTest")
+
+        set(GOOGLETEST_TARGETS
+            gtest
+            gtest_main
+            gmock
+            gmock_main
+        )
+
+        foreach(GOOGLETEST_TARGET ${GOOGLETEST_TARGETS})
+            set_target_properties (${GOOGLETEST_TARGET} PROPERTIES FOLDER ${GOOGLETEST_FOLDER})
+        endforeach()
     endif()
 endif()
