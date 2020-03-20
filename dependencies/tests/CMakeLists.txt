@@ -30,8 +30,6 @@ if(WINDOWS_STORE)
     set(PHONE_PRODUCT_ID   "B9EC94EF-8576-33B8-81E6-0092C89DBED8")
     set(PHONE_PUBLISHER_ID "00000000-0000-0000-0000-000000000000")
 
-#    set(APPLICATION_EXTENSIONS '<Extensions><uap5:Extension Category="windows.appExecutionAlias" Executable="tests.exe" EntryPoint="tests.App><uap5:AppExecutionAlias desktop4:Subsystem="console"><uap5:ExecutionAlias Alias="GameEngineSandboxTests.exe /></uap5:AppExecutionAlias></uap5:Extension></Extensions>')
-
     configure_file(
         "${CMAKE_CURRENT_SOURCE_DIR}/../pipeline/uwp/package.console.appxManifest.in"
         "${PROJECT_BINARY_DIR}/package.appxManifest"
@@ -68,16 +66,4 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 if(WINDOWS_STORE)
     set_property(SOURCE ${RESOURCES} PROPERTY VS_DEPLOYMENT_CONTENT 1)
-else()
-
-    # add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    #                    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    #                    ${COMMON_RESOURCES_DIRECTORY} $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
-    
-    # set(PLATFORM_RESOURCES)
-    # if(EXISTS "${PLATFORM_RESOURCES_DIRECTORY}" AND IS_DIRECTORY "${PLATFORM_RESOURCES_DIRECTORY}")
-    #     add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
-    #                        COMMAND ${CMAKE_COMMAND} -E copy_directory
-    #                        ${PLATFORM_RESOURCES_DIRECTORY} $<TARGET_FILE_DIR:${PROJECT_NAME}>/resources)
-    # endif()
 endif()
