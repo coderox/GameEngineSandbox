@@ -1,4 +1,5 @@
 #include "File.h"
+#include "winrt/Windows.Foundation.Collections.h"
 
 using namespace std;
 using namespace winrt;

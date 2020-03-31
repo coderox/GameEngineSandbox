@@ -70,6 +70,12 @@ if($generate -OR $build) {
     & $Cmake @("-E", "make_directory", $BuildDirectory)
 }
 if($generate -OR $build -OR $update) {
+    if($uwp) {
+        # Generate headers for cppwinrt
+        $Cppwinrt = "dependencies/tools/cppwinrt/cppwinrt.exe"
+        $CppwinrtParameters = @("-in", "10.0.18362.0", "-verbose", "-o", $BuildDirectory)
+        & $Cppwinrt $CppwinrtParameters
+    }
     $GenerateParameters = @("-E", "chdir", $BuildDirectory, "cmake", "-G", $Generator)
     $GenerateParameters += $PlatformParameters
     if($tests) {

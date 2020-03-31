@@ -77,7 +77,7 @@ function(build_library project_name)
     )
     source_group(TREE ${CMAKE_CURRENT_LIST_DIR} FILES ${EXTERNAL_HEADERS})
 
-    set(LIBRARY_INCLUDE_DIRECTORIES 
+    set(LIBRARY_INCLUDE_DIRECTORIES
         include/common
         include/${PLATFORM}
     )
@@ -102,6 +102,11 @@ function(build_library project_name)
         list(APPEND LIBRARY_INCLUDE_DIRECTORIES
             include/msft
         )
+        if(UWP)
+            list(APPEND LIBRARY_INCLUDE_DIRECTORIES
+                ${CMAKE_BINARY_DIR}
+            )
+        endif()
     else()
         file(GLOB_RECURSE EXTERNAL_PLATFORM_COMMON_HEADERS 
             include/posix/*.h*

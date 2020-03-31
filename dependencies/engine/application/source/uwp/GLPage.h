@@ -6,11 +6,10 @@
 #include <memory>
 #include "OpenGLES.h"
 #include "input/IInputManager.h"
+#include "game-loop/GameLoop.h"
 
 namespace Engine
 {
-	class GameLoop;
-
     struct GLPage : winrt::Windows::UI::Xaml::Controls::PageT<GLPage> 
     {
         GLPage(std::shared_ptr<OpenGLES> openGLES);
